@@ -1,0 +1,337 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    MINING ENVIRONMENT SETUP COMPLETE                         ║
+║                                                                              ║
+║              You now have a complete, self-contained mining                  ║
+║               environment package in this folder. Ready to use!              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+WHAT WAS CREATED
+════════════════════════════════════════════════════════════════════════════════
+
+📦 mining_env_complete/                         (~850 MB)
+   ├── mining_env/                              Core Python package (40 KB)
+   │   ├── config.py          ← EDIT THIS to customize environment
+   │   ├── parallel_env.py    ← Main environment logic
+   │   ├── single_agent_env.py
+   │   └── __init__.py
+   ├── outputs/                                 Physics & geometry (~810 MB)
+   │   ├── chilean_mine_geometry.xml           MuJoCo model (276 KB)
+   │   ├── env_new_updated.xml                 Backup model (276 KB)
+   │   ├── meshes/                              Rock geometry
+   │   │   ├── rock_0000.obj ... rock_1185.obj (1,186 mesh files)
+   │   │   └── tunnel_polygon.pkl               Validation polygon
+   │   └── trial_runs/                          (empty, results go here)
+   ├── README.md                                Complete documentation
+   ├── QUICK_IMPORT.md                         Import instructions
+   └── PACKAGE_SUMMARY.txt                     File inventory
+
+📄 MINING_ENV_SETUP_GUIDE.md                    ← START HERE
+   Complete guide to using the mining environment package
+
+🐍 rl_training.py                               (~1000 lines)
+   Standalone training script (previously created)
+
+🔧 RUN_TRAINING.sh                              Bash wrapper
+   Easy execution: ./RUN_TRAINING.sh --episodes 100
+
+📚 RL_TRAINING_GUIDE.md                         Training documentation
+📚 TRAINING_SETUP_COMPLETE.md                   Quick reference
+
+QUICK START
+════════════════════════════════════════════════════════════════════════════════
+
+Option 1: Run the training script
+──────────────────────────────────
+  cd ~/mining_env_dataset_folder
+  ./RUN_TRAINING.sh --episodes 100
+  
+  Results go to: Mining Env/outputs/trial_runs/trial_YYYYMMDD_HHMMSS/
+
+Option 2: Use the environment in your own code
+───────────────────────────────────────────────
+  export PYTHONPATH=~/mining_env_dataset_folder/mining_env_complete:$PYTHONPATH
+  
+  python
+  >>> from mining_env import MiningParallelEnv
+  >>> from mining_env.config import DEFAULT_CONFIG
+  >>> env = MiningParallelEnv(config=DEFAULT_CONFIG)
+
+UNDERSTANDING THE PACKAGE
+════════════════════════════════════════════════════════════════════════════════
+
+Key Files to Know:
+
+1. mining_env_complete/mining_env/config.py (8.2 KB)
+   ✓ Single source of truth for all parameters
+   ✓ Edit this to customize robot, reward, spawn, etc.
+   ✓ Examples:
+     • robot_radius = 0.35  (size in meters)
+     • num_lidar_beams = 360  (sensor configuration)
+     • spawn_mode = "local_curriculum"  (region to spawn)
+
+2. mining_env_complete/mining_env/parallel_env.py (26 KB)
+   ✓ Core environment implementation
+   ✓ Physics simulation (MuJoCo)
+   ✓ LiDAR sensor simulation (360 beams)
+   ✓ Reward computation
+   ✓ Multi-agent support (PettingZoo)
+
+3. mining_env_complete/outputs/chilean_mine_geometry.xml (276 KB)
+   ✓ MuJoCo physics model
+   ✓ Robot body definition
+   ✓ References 1186 rock mesh pieces
+   ✓ DO NOT edit directly
+
+4. mining_env_complete/outputs/meshes/ (~800 MB)
+   ✓ 1186 rock mesh pieces (rock_0000.obj through rock_1185.obj)
+   ✓ tunnel_polygon.pkl for spawn validation
+   ✓ DO NOT delete individual files
+
+ENVIRONMENT SPECIFICATIONS
+════════════════════════════════════════════════════════════════════════════════
+
+Robot:
+  • Radius: 0.35 m
+  • Max velocity: 1.5 m/s forward/backward
+  • Max rotation: 1.5 rad/s
+  • Action space: 2D [velocity, omega] ∈ [-1.5, 1.5]²
+
+Sensors:
+  • LiDAR: 360 beams, 0.12-30m range
+  • Noise: 0.005m Gaussian, 2% dropout
+  • Observations: 24D vector (goal, lidar, velocity)
+
+Physics:
+  • Timestep: 0.005 seconds
+  • Collision penalty: -10.0
+  • Goal bonus: +10.0
+
+Reward:
+  • 90% milestones (25%, 50%, 75%, 100% coverage)
+  • 10% progress per step
+  • Collision detection with walls
+
+Spawn Modes:
+  • local_curriculum: Anywhere in tunnel (easiest)
+  • ae_feasible: A↔E opposite ends (medium)
+  • ae_opposite: Strict A↔E (hard)
+  • auto_feasible: Auto-curriculum (default)
+
+FILE LOCATIONS REFERENCE
+════════════════════════════════════════════════════════════════════════════════
+
+All paths are relative to: ~/mining_env_dataset_folder/
+
+Location                          File                      What to Do
+──────────────────────────────────────────────────────────────────────────────
+mining_env_complete/              package root              Read README.md
+mining_env_complete/mining_env/   python code               Don't edit (mostly)
+mining_env_complete/mining_env/   config.py                 ✓ EDIT THIS to customize
+mining_env_complete/outputs/      geometry                  Don't modify
+mining_env_complete/outputs/      chilean_mine_geometry.xml Reference only
+mining_env_complete/outputs/      meshes/rock_*.obj         Reference only
+mining_env_complete/outputs/      meshes/tunnel_polygon.pkl Reference only
+rl_training.py                    training script           Run or copy elsewhere
+RUN_TRAINING.sh                   bash wrapper              Execute it
+MINING_ENV_SETUP_GUIDE.md         master documentation      START HERE
+Mining Env/outputs/trial_runs/    results directory         Results appear here
+
+EXAMPLE USAGE
+════════════════════════════════════════════════════════════════════════════════
+
+Run training for 100 episodes:
+  ./RUN_TRAINING.sh --episodes 100
+
+Run training for 30k episodes:
+  ./RUN_TRAINING.sh --episodes 30000
+
+Custom parameters:
+  ./RUN_TRAINING.sh --episodes 5000 --max-steps 2000 --policy explore
+
+Monitor results in real-time:
+  tail -f Mining\ Env/outputs/trial_runs/trial_*/episode_metrics.csv
+
+View TensorBoard:
+  tensorboard --logdir Mining\ Env/outputs/trial_runs/trial_*/tensorboard --port 6006
+
+Analyze results with Python:
+  python
+  >>> import pandas as pd
+  >>> df = pd.read_csv('Mining Env/outputs/trial_runs/trial_*/episode_metrics.csv')
+  >>> print(df.describe())
+
+CUSTOMIZATION EXAMPLES
+════════════════════════════════════════════════════════════════════════════════
+
+1. Change spawn region:
+   Edit: mining_env_complete/mining_env/config.py, line ~50
+   From: spawn_mode = "local_curriculum"
+   To:   spawn_mode = "ae_opposite"
+
+2. Reduce robot speed:
+   Edit: mining_env_complete/mining_env/config.py, line ~30
+   From: max_velocity = 1.5
+   To:   max_velocity = 1.0
+
+3. Increase episode length:
+   Edit: mining_env_complete/mining_env/config.py, line ~60
+   From: max_episode_steps = 6000
+   To:   max_episode_steps = 10000
+
+4. Modify reward function:
+   Edit: mining_env_complete/mining_env/config.py, RewardConfig class
+   Change milestone_bonus, collision_penalty, progress_reward, etc.
+
+VERIFICATION CHECKLIST
+════════════════════════════════════════════════════════════════════════════════
+
+Before using, verify:
+
+  ☐ Python files exist:
+    ls -la mining_env_complete/mining_env/
+    (Should show 4 .py files)
+
+  ☐ Geometry file exists:
+    ls -lah mining_env_complete/outputs/chilean_mine_geometry.xml
+    (Should be ~276 KB)
+
+  ☐ Mesh files exist:
+    ls mining_env_complete/outputs/meshes/*.obj | wc -l
+    (Should show ~1186)
+
+  ☐ Tunnel polygon exists:
+    ls mining_env_complete/outputs/meshes/tunnel_polygon.pkl
+    (Should exist)
+
+  ☐ Documentation exists:
+    ls mining_env_complete/*.md
+    (Should show 2 files: README.md, QUICK_IMPORT.md)
+
+  ☐ Training script exists:
+    ls -la rl_training.py
+    (Should exist and be ~20 KB)
+
+  ☐ Can write to trial_runs:
+    touch mining_env_complete/outputs/trial_runs/test.txt && rm test.txt
+    (Should succeed)
+
+EXPECTED RUN TIMES
+════════════════════════════════════════════════════════════════════════════════
+
+Training script timings (on typical hardware):
+
+  100 episodes:  5-10 minutes
+  1,000 episodes: 1-2 hours
+  5,000 episodes: 6-10 hours
+  30,000 episodes: 24-48 hours
+
+Times depend on CPU speed, memory, and environment complexity.
+
+DEPENDENCIES
+════════════════════════════════════════════════════════════════════════════════
+
+Required Python packages:
+
+  mujoco>=2.2.0              Physics simulation
+  pettingzoo>=1.20.0         Multi-agent API
+  gymnasium>=0.26.0          RL environment standard
+  numpy>=1.21.0              Numerical computing
+  shapely>=1.8.0             Geometry operations
+  matplotlib                 Plotting (optional)
+  tensorboard                Visualization (optional)
+
+Install all:
+  pip install mujoco pettingzoo gymnasium numpy shapely matplotlib tensorboard
+
+TROUBLESHOOTING
+════════════════════════════════════════════════════════════════════════════════
+
+Problem: "No module named 'mining_env'"
+Solution:
+  export PYTHONPATH=~/mining_env_dataset_folder/mining_env_complete:$PYTHONPATH
+  python your_script.py
+
+Problem: "FileNotFoundError: chilean_mine_geometry.xml"
+Solution:
+  ls mining_env_complete/outputs/chilean_mine_geometry.xml
+  If missing, the file wasn't copied correctly.
+
+Problem: Training script hangs (no output)
+Solution:
+  Use unbuffered output:
+  python -u rl_training.py --episodes 100
+
+Problem: Out of memory
+Solution:
+  Reduce episodes or memory:
+  ./RUN_TRAINING.sh --episodes 1000 --summary-window 50
+
+Problem: Rock meshes not found
+Solution:
+  ls mining_env_complete/outputs/meshes/*.obj | wc -l
+  Should show ~1186. If less, meshes weren't copied completely.
+
+NEXT STEPS
+════════════════════════════════════════════════════════════════════════════════
+
+1. Read the master guide:
+   cat MINING_ENV_SETUP_GUIDE.md
+
+2. Read the package documentation:
+   cat mining_env_complete/README.md
+   cat mining_env_complete/QUICK_IMPORT.md
+
+3. Run a quick test:
+   ./RUN_TRAINING.sh --episodes 100
+
+4. Check results:
+   ls Mining\ Env/outputs/trial_runs/
+   cat Mining\ Env/outputs/trial_runs/trial_*/summary.json | python -m json.tool
+
+5. Customize and experiment:
+   Edit mining_env_complete/mining_env/config.py
+   Run again with different parameters
+
+SUPPORT & RESOURCES
+════════════════════════════════════════════════════════════════════════════════
+
+Documentation files in this folder:
+
+  • MINING_ENV_SETUP_GUIDE.md       Complete usage guide (READ FIRST)
+  • mining_env_complete/README.md   Package overview
+  • mining_env_complete/QUICK_IMPORT.md  Import methods
+  • RL_TRAINING_GUIDE.md            Training script documentation
+  • TRAINING_SETUP_COMPLETE.md      Quick reference
+
+Original project:
+  • Located: ~/Desktop/IISC/ICRA/Mining Env/
+  • CLAUDE.md: Project instructions and architecture
+  • docs/ folder: Implementation details
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Setup complete! You now have:
+
+   1. A complete mining environment package (mining_env_complete/)
+   2. A standalone training script (rl_training.py)
+   3. Comprehensive documentation (4+ guides)
+   4. All necessary geometry and physics models
+   5. Everything needed to run RL training or develop your own algorithms
+
+You can:
+  • Train with: ./RUN_TRAINING.sh --episodes 30000
+  • Import in your code: from mining_env import MiningParallelEnv
+  • Customize: Edit mining_env_complete/mining_env/config.py
+  • Analyze: Python + pandas on the CSV results
+  • Visualize: TensorBoard on the event logs
+
+Get started now! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Created: 2026-04-10
+Status: ✅ Complete and verified
+Size: ~850 MB
+Files: 4 Python + 2 XML + 1,186 OBJ + documentation
+Ready: YES
+

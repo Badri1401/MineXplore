@@ -1,0 +1,183 @@
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                    WHERE IS EVERYTHING? - COMPLETE REFERENCE TABLE                           ║
+║                         (Created on 2026-04-10 for your trial run)                           ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+QUICK ANSWER TO YOUR QUESTIONS:
+═══════════════════════════════════════════════════════════════════════════════════════════════
+
+❓ Q: "Is the file in mining_env_dataset or the previous folder?"
+✅ A: IN MINING_ENV_DATASET FOLDER!
+   ~/mining_env_dataset_folder/Mining Env/ is where everything runs
+
+❓ Q: "Where is the code?"
+✅ A: ~/mining_env_dataset_folder/Mining Env/scripts/10_trial_pipeline_check.py
+   (and environment code in mining_env/ subfolder)
+
+❓ Q: "Where are the results being stored?"
+✅ A: ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_20260410_163209/
+   ├── episode_metrics.csv  (50 episodes logged, growing to 30,000)
+   ├── summary.json  (created at end of run)
+   ├── plots/  (PNG graphs, updated every 5000 episodes)
+   └── tensorboard/  (event logs for visualization)
+
+
+DETAILED FILE LOCATIONS TABLE
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+Category           │ File/Folder                           │ Full Path (Copy-Paste Ready)
+──────────────────┼──────────────────────────────────────┼──────────────────────────────────────
+STARTUP SCRIPT    │ QUICK_START.sh (EDITED WITH FIX)    │ ~/mining_env_dataset_folder/QUICK_START.sh
+                  │ What: Runs the 30k episode trial     │ Change: Added "python -u" for buffering
+──────────────────┼──────────────────────────────────────┼──────────────────────────────────────
+MAIN CODE         │ Trial runner (episode controller)    │ ~/mining_env_dataset_folder/Mining Env/scripts/10_trial_pipeline_check.py
+                  │ Environment config (all parameters) │ ~/mining_env_dataset_folder/Mining Env/mining_env/config.py
+                  │ Environment core (physics, rewards) │ ~/mining_env_dataset_folder/Mining Env/mining_env/parallel_env.py
+──────────────────┼──────────────────────────────────────┼──────────────────────────────────────
+CONSOLE LOG       │ 30k run log (all terminal output)    │ ~/mining_env_dataset_folder/Mining Env/trial_30k_20260410_163207.log
+                  │ Status: 3.1 KB, 50 episodes so far   │ View with: tail -f (real-time) or cat
+──────────────────┼──────────────────────────────────────┼──────────────────────────────────────
+RESULTS - CSV     │ Episode metrics (per-episode data)   │ ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_20260410_163209/episode_metrics.csv
+                  │ Columns: 23 (episode, reward, cov..) │ Status: 7.3 KB, growing (50 rows now)
+                  │                                      │ Format: CSV - open in Excel/Python/pandas
+RESULTS - JSON    │ Aggregated statistics summary        │ ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_20260410_163209/summary.json
+                  │ Content: avg rewards, success rates  │ Status: Created at end of 30k run
+RESULTS - PLOTS   │ Trend graphs (PNG images)            │ ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_20260410_163209/plots/trends/
+                  │ (reward, coverage, new cells, etc)  │ Status: Updated every 5000 episodes
+RESULTS - PLOTS   │ Rate graphs (success/collision PNG) │ ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_20260410_163209/plots/rates/
+                  │ (milestone hit rates, timeout %)     │ View with: open *.png or display *.png
+RESULTS - TB      │ TensorBoard event logs (binary)      │ ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_20260410_163209/tensorboard/
+                  │ For live metric visualization        │ View: tensorboard --logdir ... --port 6006
+
+
+QUICK COMMANDS TO MONITOR YOUR RUNNING TRIAL
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+Task                                    │ Command (Copy-Paste)
+────────────────────────────────────────┼────────────────────────────────────────────────────────
+Watch console output in REAL-TIME       │ tail -f ~/mining_env_dataset_folder/Mining\ Env/trial_30k_20260410_163207.log
+                                        │
+See how many episodes COMPLETED         │ wc -l ~/mining_env_dataset_folder/Mining\ Env/outputs/trial_runs/trial_20260410_163209/episode_metrics.csv
+                                        │
+View first & last 5 metrics lines       │ head -5 ~/mining_env_dataset_folder/Mining\ Env/outputs/trial_runs/trial_20260410_163209/episode_metrics.csv
+                                        │ tail -5 ~/mining_env_dataset_folder/Mining\ Env/outputs/trial_runs/trial_20260410_163209/episode_metrics.csv
+                                        │
+Check PROCESS CPU/MEMORY usage          │ ps aux | grep trial_pipeline_check
+                                        │
+List all results files                  │ ls -lah ~/mining_env_dataset_folder/Mining\ Env/outputs/trial_runs/trial_20260410_163209/
+                                        │
+View summary JSON stats                 │ cat ~/mining_env_dataset_folder/Mining\ Env/outputs/trial_runs/trial_20260410_163209/summary.json
+                                        │
+Launch TensorBoard (port 6006)          │ tensorboard --logdir ~/mining_env_dataset_folder/Mining\ Env/outputs/trial_runs/trial_20260410_163209/tensorboard --port 6006
+
+
+FOLDER STRUCTURE VISUAL
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+~/mining_env_dataset_folder/
+├── QUICK_START.sh  ◄─── You edited this (added python -u)
+├── README.md
+├── IMPLEMENTATION_COMPLETE.md
+└── Mining Env/  ◄─── YOUR WORKING DIRECTORY (where trial runs)
+    ├── scripts/
+    │   └── 10_trial_pipeline_check.py  ◄─── Main trial script
+    ├── mining_env/
+    │   ├── config.py  ◄─── All parameters (edit here to change robot/reward)
+    │   ├── parallel_env.py  ◄─── Core environment logic
+    │   └── ...
+    ├── outputs/  ◄─── RESULTS FOLDER
+    │   └── trial_runs/
+    │       └── trial_20260410_163209/  ◄─── YOUR CURRENT TRIAL RESULTS
+    │           ├── episode_metrics.csv  ◄─── 23 columns × 30k rows (when done)
+    │           ├── summary.json  ◄─── Final aggregated stats
+    │           ├── plots/  ◄─── PNG graphs
+    │           │   ├── trends/  (reward, coverage curves)
+    │           │   └── rates/   (success, collision, timeout rates)
+    │           └── tensorboard/  ◄─── Event logs (for visualization)
+    ├── trial_30k_20260410_163207.log  ◄─── Console output log
+    └── ...
+
+
+COMPARISON: TWO LOCATIONS IN YOUR SYSTEM
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+WHERE YOU ARE NOW (ACTIVELY RUNNING):
+  Base: ~/mining_env_dataset_folder/
+  Code: Mining Env/scripts/10_trial_pipeline_check.py
+  Results: Mining Env/outputs/trial_runs/trial_20260410_163209/  ✓ CURRENT RUN HERE
+
+ORIGINAL REPO (NOT CURRENTLY USED):
+  Base: ~/Desktop/IISC/ICRA/Mining Env/
+  Code: scripts/10_trial_pipeline_check.py (same code)
+  Results: outputs/trial_runs/ (old previous runs - not your current one)
+
+
+WHAT YOU EDITED & WHY
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+File: ~/mining_env_dataset_folder/QUICK_START.sh
+
+What changed:
+  FROM: python scripts/10_trial_pipeline_check.py \
+  TO:   python -u scripts/10_trial_pipeline_check.py \
+
+Why:
+  - Python was buffering output (4KB blocks) instead of printing real-time
+  - When piping to "tee", Python doesn't detect a TTY, so no output visible
+  - The "-u" flag forces unbuffered output (print immediately)
+  - Now you see progress as episodes complete
+
+
+STATUS OF YOUR 30K EPISODE RUN
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+Started: 2026-04-10 16:32 (approx)
+Episodes completed: 50 (out of 30,000 requested)
+CSV file size: 7.3 KB (growing)
+Log file size: 3.1 KB (growing)
+CPU usage: 100%
+Memory usage: ~588 MB
+Estimated completion: ~24-48 hours (depends on episode speed)
+
+Results updated:
+  - CSV file: After every episode
+  - Log file: Real-time (with -u fix)
+  - Plots: Every 5,000 episodes
+  - Summary JSON: Only at very end
+
+
+HOW TO USE THE FILES AFTER RUN COMPLETES
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+1. ANALYZE EPISODE DATA (CSV):
+   python
+   import pandas as pd
+   df = pd.read_csv('episode_metrics.csv')
+   print(df.describe())  # summary statistics
+
+2. VIEW PLOTS:
+   open plots/trends/reward_total.png
+   open plots/rates/milestone_75_rate.png
+
+3. REAL-TIME TENSORBOARD:
+   tensorboard --logdir tensorboard/ --port 6006
+   Then visit: http://localhost:6006
+
+4. READ SUMMARY JSON:
+   cat summary.json  # or open in any text editor
+
+
+KEY PATHS TO REMEMBER
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+Always use these base paths:
+  Code base:     ~/mining_env_dataset_folder/Mining Env/
+  Trial results: ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_20260410_163209/
+  Log file:      ~/mining_env_dataset_folder/Mining Env/trial_30k_*.log
+  Startup:       ~/mining_env_dataset_folder/QUICK_START.sh
+
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+Notes: This file was auto-generated on 2026-04-10 for trial ID trial_20260410_163209.
+Your 30k episode trial is currently running and results are accumulating.
+═════════════════════════════════════════════════════════════════════════════════════════════════

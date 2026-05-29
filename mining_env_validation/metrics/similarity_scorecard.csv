@@ -1,0 +1,8 @@
+dimension,real_value,sim_value,sim_over_real,per_axis_similarity
+jaggedness_deg,37.477152,26.245913,0.7003,0.9758
+bump_rms,0.055162,0.019943,0.3615,0.8189
+scale_integral,0.149121,0.050549,0.3390,0.7978
+peak_lambda_m,1.757490,1.463839,0.8329,0.9936
+ceil_rq,0.128520,0.019789,0.1540,0.5088
+heterogeneity,0.010008,0.003202,0.3199,0.7782
+OVERALL_GEOMEAN,,,,0.7941

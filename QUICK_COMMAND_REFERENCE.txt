@@ -1,0 +1,177 @@
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                         QUICK COMMAND REFERENCE                                              ║
+║                    (Copy-Paste Ready to Run)                                                 ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+📍 LOCATION OF FILES
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+Main script:    ~/mining_env_dataset_folder/rl_training.py
+Bash wrapper:   ~/mining_env_dataset_folder/RUN_TRAINING.sh
+Results folder: ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+🚀 OPTION 1: SIMPLEST - USE BASH WRAPPER
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+cd ~/mining_env_dataset_folder
+./RUN_TRAINING.sh --episodes 30000
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+🚀 OPTION 2: DIRECT PYTHON
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+cd ~/mining_env_dataset_folder
+source Mining\ Env/.venv/bin/activate
+python -u rl_training.py --episodes 30000
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+📝 QUICK TEST (100 episodes in ~5 minutes)
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+cd ~/mining_env_dataset_folder
+./RUN_TRAINING.sh --episodes 100 --max-steps 500
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+⚙️  CUSTOM PARAMETERS EXAMPLES
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+# 5000 episodes with custom settings
+./RUN_TRAINING.sh --episodes 5000 --max-steps 3000 --print-every 5
+
+# 30k episodes with random policy
+./RUN_TRAINING.sh --episodes 30000 --policy random
+
+# 10k episodes, custom output directory
+./RUN_TRAINING.sh --episodes 10000 --run-dir Mining\ Env/my_custom_results
+
+# Custom everything
+./RUN_TRAINING.sh \
+    --episodes 5000 \
+    --max-steps 2000 \
+    --policy explore \
+    --print-every 5 \
+    --plot-every 1000 \
+    --summary-window 50
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+📊 MONITOR TRAINING (while it's running)
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Watch the log file in real-time
+tail -f Mining\ Env/trial_*.log
+
+# Check progress (episodes completed)
+wc -l Mining\ Env/outputs/trial_runs/trial_*/episode_metrics.csv
+
+# View process status
+ps aux | grep rl_training
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+📈 ANALYZE RESULTS (after training completes)
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+# View summary JSON
+cat Mining\ Env/outputs/trial_runs/trial_*/summary.json | python -m json.tool
+
+# View CSV data
+head -20 Mining\ Env/outputs/trial_runs/trial_*/episode_metrics.csv
+
+# Launch TensorBoard
+tensorboard --logdir Mining\ Env/outputs/trial_runs/trial_*/tensorboard --port 6006
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+📁 RESULTS LOCATION
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+After running, results are in:
+
+  ~/mining_env_dataset_folder/Mining Env/outputs/trial_runs/trial_YYYYMMDD_HHMMSS/
+
+Contains:
+  • episode_metrics.csv   - Per-episode metrics (23 columns)
+  • summary.json         - Aggregate stats
+  • plots/               - PNG graphs
+  • tensorboard/         - Event logs for visualization
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+🎯 COMPLETE WORKFLOW
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+# Step 1: Quick test (5 min)
+cd ~/mining_env_dataset_folder
+./RUN_TRAINING.sh --episodes 100
+
+# Step 2: Check results
+cat Mining\ Env/outputs/trial_runs/trial_*/summary.json | python -m json.tool
+
+# Step 3: Run full 30k (24-48 hours)
+./RUN_TRAINING.sh --episodes 30000
+
+# Step 4: While waiting, view in real-time
+tensorboard --logdir Mining\ Env/outputs/trial_runs/trial_*/tensorboard --port 6006
+
+# Step 5: After completion, analyze
+python << 'PYTHON'
+import pandas as pd
+df = pd.read_csv('Mining Env/outputs/trial_runs/trial_*/episode_metrics.csv')
+print("Summary Statistics:")
+print(df[['reward_total', 'coverage_fraction', 'collision_steps']].describe())
+PYTHON
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+✨ KEY PARAMETERS EXPLAINED
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+--episodes 30000           How many episodes to run (default: 30000)
+--max-steps 6000          Max steps per episode (default: 6000)
+--policy explore          Policy type: 'explore' or 'random' (default: explore)
+--print-every 10          Print progress every N episodes (default: 10)
+--plot-every 5000         Refresh plots every N episodes (default: 5000)
+--summary-window 100      Window for rolling stats (default: 100)
+--run-dir outputs/...     Output directory (default: outputs/trial_runs)
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+Read these files in ~/mining_env_dataset_folder/:
+
+1. TRAINING_SETUP_COMPLETE.md  - Overview & quick ref
+2. RL_TRAINING_GUIDE.md        - Detailed guide
+3. rl_training.py              - Source code (read docstrings)
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+❓ TROUBLESHOOTING
+════════════════════════════════════════════════════════════════════════════════════════════════
+
+"Mining Env folder not found"
+  → Make sure you're in: cd ~/mining_env_dataset_folder
+
+"No module named mining_env"
+  → Activate venv: source Mining\ Env/.venv/bin/activate
+
+"Script hangs with no output"
+  → Use unbuffered: python -u rl_training.py
+
+"Out of memory"
+  → Reduce episodes: --episodes 1000
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
+
+✅ YOU ARE READY TO USE THIS!
+
+Just copy-paste any command above and run it.
+
+═════════════════════════════════════════════════════════════════════════════════════════════════
